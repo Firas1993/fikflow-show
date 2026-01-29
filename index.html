@@ -26,6 +26,55 @@
             line-height: 1.6;
             color: var(--text-dark);
             overflow-x: hidden;
+            transition: all 0.3s ease;
+        }
+
+        body.rtl {
+            direction: rtl;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        /* Language Switcher */
+        .language-switcher {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            gap: 10px;
+            background: rgba(30, 45, 79, 0.9);
+            padding: 10px 15px;
+            border-radius: 50px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        body.rtl .language-switcher {
+            right: auto;
+            left: 20px;
+        }
+
+        .lang-btn {
+            background: transparent;
+            border: 2px solid var(--secondary-color);
+            color: white;
+            padding: 8px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .lang-btn:hover {
+            background: var(--secondary-color);
+            transform: scale(1.05);
+        }
+
+        .lang-btn.active {
+            background: var(--gradient-2);
+            border-color: var(--accent-color);
+            box-shadow: 0 3px 15px rgba(95, 163, 208, 0.5);
         }
 
         /* Animations */
@@ -103,6 +152,15 @@
             }
         }
 
+        @keyframes rotateGlow {
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
         /* Hero Section */
         .hero {
             background: var(--primary-color);
@@ -141,6 +199,20 @@
         .logo-container {
             animation: float 6s ease-in-out infinite;
             margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .logo-container::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(95, 163, 208, 0.2) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: pulse 3s ease-in-out infinite;
         }
 
         .logo {
@@ -148,6 +220,8 @@
             width: 100%;
             height: auto;
             filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+            position: relative;
+            z-index: 2;
         }
 
         .hero h1 {
@@ -291,6 +365,11 @@
             border-radius: 2px;
         }
 
+        body.rtl section h2::after {
+            left: auto;
+            right: 0;
+        }
+
         /* About Section */
         .about-content {
             background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
@@ -406,8 +485,18 @@
             opacity: 0.1;
         }
 
+        body.rtl .client-card::before {
+            left: auto;
+            right: -100%;
+            transition: right 0.5s;
+        }
+
         .client-card:hover::before {
             left: 0;
+        }
+
+        body.rtl .client-card:hover::before {
+            right: 0;
         }
 
         .client-card:hover {
@@ -504,6 +593,7 @@
             text-decoration: none;
             font-size: 1.1rem;
             transition: color 0.3s;
+            word-break: break-word;
         }
 
         .contact-item a:hover {
@@ -554,6 +644,15 @@
             .container {
                 padding: 2rem 1rem;
             }
+
+            .language-switcher {
+                top: 10px;
+                right: 10px;
+            }
+
+            body.rtl .language-switcher {
+                left: 10px;
+            }
         }
 
         /* Scroll reveal effect */
@@ -567,144 +666,340 @@
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Hide content for inactive language */
+        .lang-content {
+            display: none;
+        }
+
+        .lang-content.active {
+            display: block;
+        }
     </style>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-    <!-- Hero Section -->
-    <div class="hero">
-        <div class="hero-content">
-            <div class="logo-container">
-                <img src="logo.png" alt="FikrFlow Logo" class="logo" id="logo-img">
-            </div>
-            <h1>FikrFlow</h1>
-            <p class="tagline">Empowering Innovation Through Technology</p>
-            <a href="#contact" class="cta-button">Get In Touch</a>
-        </div>
-        <div class="scroll-indicator"></div>
+    <!-- Language Switcher -->
+    <div class="language-switcher">
+        <button class="lang-btn active" data-lang="en">English</button>
+        <button class="lang-btn" data-lang="ar">العربية</button>
     </div>
 
-    <!-- Navigation -->
-    <nav>
-        <div class="nav-container">
-            <a href="#about">About</a>
-            <a href="#services">Services</a>
-            <a href="#clients">Our Clients</a>
-            <a href="#contact">Contact</a>
+    <!-- ENGLISH CONTENT -->
+    <div class="lang-content active" data-content="en">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <div class="logo-container">
+                    <img src="logo.png" alt="FikrFlow Logo" class="logo">
+                </div>
+                <h1>FikrFlow</h1>
+                <p class="tagline">Empowering Innovation Through Technology</p>
+                <a href="#contact" class="cta-button">Get In Touch</a>
+            </div>
+            <div class="scroll-indicator"></div>
         </div>
-    </nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        <!-- About Section -->
-        <section id="about" class="reveal">
-            <h2>About Us</h2>
-            <div class="about-content">
-                <p>
-                    Founded in <strong>2025</strong>, FikrFlow represents the next generation of technology consulting. 
-                    We are passionate innovators and problem solvers dedicated to transforming businesses through 
-                    cutting-edge software development, advanced data engineering, and intelligent IoT solutions.
+        <!-- Navigation -->
+        <nav>
+            <div class="nav-container">
+                <a href="#about">About</a>
+                <a href="#services">Services</a>
+                <a href="#clients">Our Clients</a>
+                <a href="#contact">Contact</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container">
+            <!-- About Section -->
+            <section id="about" class="reveal">
+                <h2>About Us</h2>
+                <div class="about-content">
+                    <p>
+                        Founded in <strong>2025</strong>, FikrFlow represents the next generation of technology consulting. 
+                        We are passionate innovators and problem solvers dedicated to transforming businesses through 
+                        cutting-edge software development, advanced data engineering, and intelligent IoT solutions.
+                    </p>
+                    <p style="margin-top: 1.5rem;">
+                        Our team combines deep technical expertise with industry insights to deliver solutions that 
+                        don't just meet today's challenges—they anticipate tomorrow's opportunities.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services" class="reveal">
+                <h2>Our Services</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">💻</div>
+                        <h3>Software Development</h3>
+                        <p>
+                            Custom software solutions engineered for excellence. We build scalable, robust applications 
+                            using modern frameworks and best practices. From MVP to enterprise-grade systems, we turn 
+                            your vision into reality.
+                        </p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">📊</div>
+                        <h3>Data Engineering</h3>
+                        <p>
+                            Transform raw data into strategic assets. We architect and implement sophisticated data 
+                            pipelines, warehouses, and analytics platforms that unlock insights and drive data-informed 
+                            decision making.
+                        </p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🌐</div>
+                        <h3>IoT Solutions</h3>
+                        <p>
+                            Bridge the physical and digital worlds with intelligent IoT ecosystems. We design connected 
+                            solutions that collect, analyze, and act on real-time data to optimize operations and create 
+                            new possibilities.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clients Section -->
+            <section id="clients" class="reveal">
+                <h2>Our Clients</h2>
+                <p style="font-size: 1.1rem; margin-top: 1rem;">
+                    We're proud to partner with forward-thinking organizations that are shaping the future:
                 </p>
-                <p style="margin-top: 1.5rem;">
-                    Our team combines deep technical expertise with industry insights to deliver solutions that 
-                    don't just meet today's challenges—they anticipate tomorrow's opportunities.
+                <div class="clients-grid">
+                    <div class="client-card">
+                        <span class="client-icon">🚀</span>
+                        <a href="https://strato-data.netlify.app/" target="_blank" rel="noopener">Strato-Data</a>
+                    </div>
+                    <div class="client-card">
+                        <span class="client-icon">🎯</span>
+                        <a href="https://noqta.tn/" target="_blank" rel="noopener">Noqta</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Contact Section -->
+        <section id="contact" class="reveal">
+            <div class="contact-section">
+                <h2>Let's Build Something Amazing</h2>
+                <p class="contact-intro">
+                    Ready to transform your ideas into reality? Get in touch with our team today.
                 </p>
-            </div>
-        </section>
-
-        <!-- Services Section -->
-        <section id="services" class="reveal">
-            <h2>Our Services</h2>
-            <div class="services-grid">
-                <div class="service-card">
-                    <div class="service-icon">💻</div>
-                    <h3>Software Development</h3>
-                    <p>
-                        Custom software solutions engineered for excellence. We build scalable, robust applications 
-                        using modern frameworks and best practices. From MVP to enterprise-grade systems, we turn 
-                        your vision into reality.
-                    </p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">📊</div>
-                    <h3>Data Engineering</h3>
-                    <p>
-                        Transform raw data into strategic assets. We architect and implement sophisticated data 
-                        pipelines, warehouses, and analytics platforms that unlock insights and drive data-informed 
-                        decision making.
-                    </p>
-                </div>
-                <div class="service-card">
-                    <div class="service-icon">🌐</div>
-                    <h3>IoT Solutions</h3>
-                    <p>
-                        Bridge the physical and digital worlds with intelligent IoT ecosystems. We design connected 
-                        solutions that collect, analyze, and act on real-time data to optimize operations and create 
-                        new possibilities.
-                    </p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span class="contact-icon">📧</span>
+                        <h3>Email</h3>
+                        <a href="mailto:contact.fikrflow@gmail.com">contact.fikrflow@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📱</span>
+                        <h3>Phone</h3>
+                        <a href="tel:+21620091961">+216 20 091 961</a>
+                    </div>
                 </div>
             </div>
         </section>
 
-        <!-- Clients Section -->
-        <section id="clients" class="reveal">
-            <h2>Our Clients</h2>
-            <p style="font-size: 1.1rem; margin-top: 1rem;">
-                We're proud to partner with forward-thinking organizations that are shaping the future:
-            </p>
-            <div class="clients-grid">
-                <div class="client-card">
-                    <span class="client-icon">🚀</span>
-                    <a href="https://strato-data.netlify.app/" target="_blank" rel="noopener">Strato-Data</a>
-                </div>
-                <div class="client-card">
-                    <span class="client-icon">🎯</span>
-                    <a href="https://noqta.tn/" target="_blank" rel="noopener">Noqta</a>
-                </div>
-            </div>
-        </section>
+        <!-- Footer -->
+        <footer>
+            <p><strong>&copy; 2025 FikrFlow</strong></p>
+            <p>Consulting Excellence in Software Development, Data Engineering & IoT</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">Empowering businesses through technology</p>
+        </footer>
     </div>
 
-    <!-- Contact Section -->
-    <section id="contact" class="reveal">
-        <div class="contact-section">
-            <h2>Let's Build Something Amazing</h2>
-            <p class="contact-intro">
-                Ready to transform your ideas into reality? Get in touch with our team today.
-            </p>
-            <div class="contact-info">
-                <div class="contact-item">
-                    <span class="contact-icon">📧</span>
-                    <h3>Email</h3>
-                    <a href="mailto:contact.fikrflow@gmail.com">contact.fikrflow@gmail.com</a>
+    <!-- ARABIC CONTENT -->
+    <div class="lang-content" data-content="ar">
+        <!-- Hero Section -->
+        <div class="hero">
+            <div class="hero-content">
+                <div class="logo-container">
+                    <img src="logo.png" alt="شعار فكر فلو" class="logo">
                 </div>
-                <div class="contact-item">
-                    <span class="contact-icon">📱</span>
-                    <h3>Phone</h3>
-                    <a href="tel:+21620091961">+216 20 091 961</a>
+                <h1>فكر فلو</h1>
+                <p class="tagline">تمكين الابتكار من خلال التكنولوجيا</p>
+                <a href="#contact-ar" class="cta-button">تواصل معنا</a>
+            </div>
+            <div class="scroll-indicator"></div>
+        </div>
+
+        <!-- Navigation -->
+        <nav>
+            <div class="nav-container">
+                <a href="#about-ar">من نحن</a>
+                <a href="#services-ar">خدماتنا</a>
+                <a href="#clients-ar">عملاؤنا</a>
+                <a href="#contact-ar">اتصل بنا</a>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <div class="container">
+            <!-- About Section -->
+            <section id="about-ar" class="reveal">
+                <h2>من نحن</h2>
+                <div class="about-content">
+                    <p>
+                        تأسست <strong>فكر فلو</strong> في عام <strong>2025</strong>، وتمثل الجيل القادم من الاستشارات التكنولوجية.
+                        نحن مبتكرون متحمسون وحلّالو مشاكل ملتزمون بتحويل الأعمال من خلال
+                        تطوير البرمجيات المتطورة، وهندسة البيانات المتقدمة، وحلول إنترنت الأشياء الذكية.
+                    </p>
+                    <p style="margin-top: 1.5rem;">
+                        يجمع فريقنا بين الخبرة التقنية العميقة والرؤى الصناعية لتقديم حلول
+                        لا تلبي تحديات اليوم فحسب - بل تتوقع فرص الغد.
+                    </p>
+                </div>
+            </section>
+
+            <!-- Services Section -->
+            <section id="services-ar" class="reveal">
+                <h2>خدماتنا</h2>
+                <div class="services-grid">
+                    <div class="service-card">
+                        <div class="service-icon">💻</div>
+                        <h3>تطوير البرمجيات</h3>
+                        <p>
+                            حلول برمجية مخصصة مصممة للتميز. نقوم ببناء تطبيقات قابلة للتطوير وقوية
+                            باستخدام أطر عمل حديثة وأفضل الممارسات. من المنتج الأولي إلى الأنظمة على مستوى المؤسسات،
+                            نحول رؤيتك إلى واقع.
+                        </p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">📊</div>
+                        <h3>هندسة البيانات</h3>
+                        <p>
+                            تحويل البيانات الخام إلى أصول استراتيجية. نقوم بتصميم وتنفيذ خطوط
+                            بيانات متطورة ومستودعات ومنصات تحليلات تفتح الرؤى وتدفع اتخاذ القرارات
+                            المستندة إلى البيانات.
+                        </p>
+                    </div>
+                    <div class="service-card">
+                        <div class="service-icon">🌐</div>
+                        <h3>حلول إنترنت الأشياء</h3>
+                        <p>
+                            ربط العالمين المادي والرقمي بأنظمة إنترنت الأشياء الذكية. نصمم حلولاً
+                            متصلة تجمع البيانات في الوقت الفعلي وتحللها وتتصرف بناءً عليها لتحسين
+                            العمليات وخلق إمكانيات جديدة.
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Clients Section -->
+            <section id="clients-ar" class="reveal">
+                <h2>عملاؤنا</h2>
+                <p style="font-size: 1.1rem; margin-top: 1rem;">
+                    نفخر بالشراكة مع المؤسسات ذات التفكير المستقبلي التي تشكل المستقبل:
+                </p>
+                <div class="clients-grid">
+                    <div class="client-card">
+                        <span class="client-icon">🚀</span>
+                        <a href="https://strato-data.netlify.app/" target="_blank" rel="noopener">سترات داتا</a>
+                    </div>
+                    <div class="client-card">
+                        <span class="client-icon">🎯</span>
+                        <a href="https://noqta.tn/" target="_blank" rel="noopener">نقطة</a>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <!-- Contact Section -->
+        <section id="contact-ar" class="reveal">
+            <div class="contact-section">
+                <h2>لنبني شيئًا مذهلاً معًا</h2>
+                <p class="contact-intro">
+                    هل أنت مستعد لتحويل أفكارك إلى واقع؟ تواصل مع فريقنا اليوم.
+                </p>
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <span class="contact-icon">📧</span>
+                        <h3>البريد الإلكتروني</h3>
+                        <a href="mailto:contact.fikrflow@gmail.com">contact.fikrflow@gmail.com</a>
+                    </div>
+                    <div class="contact-item">
+                        <span class="contact-icon">📱</span>
+                        <h3>الهاتف</h3>
+                        <a href="tel:+21620091961">961 091 20 216+</a>
+                    </div>
                 </div>
             </div>
-        </div>
-    </section>
+        </section>
 
-    <!-- Footer -->
-    <footer>
-        <p><strong>&copy; 2025 FikrFlow</strong></p>
-        <p>Consulting Excellence in Software Development, Data Engineering & IoT</p>
-        <p style="margin-top: 1rem; font-size: 0.9rem;">Empowering businesses through technology</p>
-    </footer>
+        <!-- Footer -->
+        <footer>
+            <p><strong>&copy; 2025 فكر فلو</strong></p>
+            <p>التميز الاستشاري في تطوير البرمجيات وهندسة البيانات وإنترنت الأشياء</p>
+            <p style="margin-top: 1rem; font-size: 0.9rem;">تمكين الأعمال من خلال التكنولوجيا</p>
+        </footer>
+    </div>
 
     <script>
+        // Language Switcher Functionality
+        const langButtons = document.querySelectorAll('.lang-btn');
+        const langContents = document.querySelectorAll('.lang-content');
+        const body = document.body;
+
+        // Load saved language preference
+        const savedLang = localStorage.getItem('preferred-lang') || 'en';
+        switchLanguage(savedLang);
+
+        langButtons.forEach(btn => {
+            btn.addEventListener('click', () => {
+                const lang = btn.getAttribute('data-lang');
+                switchLanguage(lang);
+                localStorage.setItem('preferred-lang', lang);
+            });
+        });
+
+        function switchLanguage(lang) {
+            // Update active button
+            langButtons.forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+            });
+
+            // Update active content
+            langContents.forEach(content => {
+                content.classList.toggle('active', content.getAttribute('data-content') === lang);
+            });
+
+            // Update body direction for RTL
+            if (lang === 'ar') {
+                body.classList.add('rtl');
+                document.documentElement.setAttribute('lang', 'ar');
+            } else {
+                body.classList.remove('rtl');
+                document.documentElement.setAttribute('lang', 'en');
+            }
+
+            // Re-trigger reveal animations
+            setTimeout(() => {
+                reveal();
+            }, 100);
+        }
+
         // Scroll reveal animation
         function reveal() {
             const reveals = document.querySelectorAll('.reveal');
             
             reveals.forEach(element => {
+                // Only reveal elements in the active language content
+                const parentContent = element.closest('.lang-content');
+                if (parentContent && !parentContent.classList.contains('active')) {
+                    return;
+                }
+
                 const windowHeight = window.innerHeight;
                 const elementTop = element.getBoundingClientRect().top;
                 const elementVisible = 150;
                 
                 if (elementTop < windowHeight - elementVisible) {
                     element.classList.add('active');
+                } else {
+                    element.classList.remove('active');
                 }
             });
         }
@@ -713,30 +1008,19 @@
         reveal(); // Check on load
 
         // Smooth scrolling for navigation links
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('a[href^="#"]')) {
                 e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
+                const targetId = e.target.getAttribute('href');
+                const target = document.querySelector(targetId);
                 if (target) {
                     target.scrollIntoView({
                         behavior: 'smooth',
                         block: 'start'
                     });
                 }
-            });
+            }
         });
-
-        // Load the actual logo image
-        // Since I can't directly embed the image, you'll need to replace the src
-        // Option 1: Upload the image to your repo and reference it
-        // Option 2: Use a base64 encoded version (see below)
-        
-        // Here's how to use your logo - replace the src with one of these options:
-        // 1. If you upload to your repo: document.getElementById('logo-img').src = './logo.png';
-        // 2. If you want to use the uploaded image, save it and reference its path
-        
-        // For now, I'll create a placeholder. Replace this with your actual logo path:
-        document.getElementById('logo-img').src = 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgZmlsbD0iIzFlMmQ0ZiIvPjx0ZXh0IHg9IjUwJSIgeT0iNDAlIiBmb250LWZhbWlseT0iQXJpYWwiIGZvbnQtc2l6ZT0iMTAwIiBmaWxsPSIjNWZhM2QwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkeT0iLjNlbSI+RkY8L3RleHQ+PHRleHQgeD0iNTAlIiB5PSI2NSUiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSI0MCIgZmlsbD0iI2ZmZmZmZiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgZHk9Ii4zZW0iPkZpa3JGbG93PC90ZXh0Pjwvc3ZnPg==';
     </script>
 </body>
 </html>
